@@ -11,12 +11,52 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
+import { signUp } from "@/lib/auth/auth-client";
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Loader } from "lucide-react";
 
 export default function SignUpPage() {
+  const router = useRouter();
+  //SECTION - Form data
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  //SECTION - State handling
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState<boolean>();
+
+  async function handleSubmit(e: React.SubmitEvent) {
+    e.preventDefault();
+
+    setError("");
+    setLoading(true);
+
+    try {
+      const res = await signUp.email({
+        name,
+        email,
+        password,
+      });
+
+      if (res.error) {
+        setError(res.error.message ?? "Failed to sign up");
+      } else {
+        router.push("/dashboard");
+      }
+    } catch (err) {
+      console.log(err);
+      setError("An unexpected error occurred");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center bg-white p-4">
       <Card className="w-full max-w-md border-gray-200 shadow-lg">
-        <CardHeader className="space-y-1">
+        <CardHeader className="space-y-1 text-center pt-2">
           <CardTitle className="text-2xl font-bold text-black">
             Sign Up
           </CardTitle>
@@ -24,8 +64,13 @@ export default function SignUpPage() {
             Create an account to start tracking your job applications
           </CardDescription>
         </CardHeader>
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
+            {error && (
+              <div className="rounded-md bg-destructive/15 p-3 text-sm text-destructive">
+                {error}
+              </div>
+            )}
             <div className="space-y-2">
               <Label htmlFor="name" className="text-gray-700">
                 Name
@@ -35,6 +80,8 @@ export default function SignUpPage() {
                 type="text"
                 id="name"
                 placeholder="Ahmed Ali"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 required
               />
             </div>
@@ -47,6 +94,8 @@ export default function SignUpPage() {
                 type="email"
                 id="email"
                 placeholder="ahmed-ali@exmaple.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 required
               />
             </div>
@@ -60,16 +109,25 @@ export default function SignUpPage() {
                 id="password"
                 minLength={8}
                 placeholder="********"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 required
               />
             </div>
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
             <Button
+              disabled={loading}
               type="submit"
               className="w-full bg-primary hover:bg-primary/90 cursor-pointer h-10"
             >
-              Sign up
+              {loading ? (
+                <>
+                  <Loader className="animate-spin" /> Creating account...
+                </>
+              ) : (
+                "Sign up"
+              )}
             </Button>
             <p className="text-center text-sm text-gray-600">
               Already have an account?
