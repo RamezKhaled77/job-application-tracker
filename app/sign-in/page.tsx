@@ -13,11 +13,9 @@ import { Label } from "@/components/ui/label";
 import { signIn } from "@/lib/auth/auth-client";
 import { Loader } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function SignInPage() {
-  const router = useRouter();
   //SECTION - Form data
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -41,7 +39,7 @@ export default function SignInPage() {
       if (res.error) {
         setError(res.error.message ?? "Failed to sign in");
       } else {
-        router.push("/dashboard");
+        window.location.href = "/dashboard";
       }
     } catch (err) {
       console.log(err);

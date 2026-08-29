@@ -13,11 +13,9 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { signUp } from "@/lib/auth/auth-client";
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Loader } from "lucide-react";
 
 export default function SignUpPage() {
-  const router = useRouter();
   //SECTION - Form data
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -43,7 +41,7 @@ export default function SignUpPage() {
       if (res.error) {
         setError(res.error.message ?? "Failed to sign up");
       } else {
-        router.push("/dashboard");
+        window.location.href = "/dashboard";
       }
     } catch (err) {
       console.log(err);
