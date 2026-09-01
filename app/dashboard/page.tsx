@@ -1,8 +1,8 @@
 import KanbanBoard from "@/components/KanbanBoard";
 import { getSession } from "@/lib/auth/auth";
 import connectDB from "@/lib/db";
+import { initializeUserBoard } from "@/lib/init-user-board";
 import { Board } from "@/lib/models";
-import { Kanban } from "lucide-react";
 import { redirect } from "next/navigation";
 
 export default async function DashboardPage() {
@@ -15,8 +15,10 @@ export default async function DashboardPage() {
 
   const board = await Board.findOne({
     userId: session.user.id,
-    name: "Job Hunt",
+    name: "job hunt",
   });
+  const rawBoard = await initializeUserBoard(session.user.id);
+  const plainBoard = JSON.parse(JSON.stringify(rawBoard));
 
   return (
     <div className="min-h-screen bg-white">
@@ -27,7 +29,7 @@ export default async function DashboardPage() {
           </h1>
           <p className="text-zinc-800">Track your job applications</p>
         </div>
-        <KanbanBoard board={board} userId={session.user.id} />
+        <KanbanBoard board={plainBoard} userId={session.user.id} />
       </div>
     </div>
   );
