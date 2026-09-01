@@ -1,25 +1,7 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, { Schema } from "mongoose";
+import { JobApplication } from "./models.types";
 
-export interface IJobApplication extends Document {
-  company: string;
-  position: string;
-  location?: string;
-  status: string;
-  columnId: mongoose.Types.ObjectId;
-  boardId: mongoose.Types.ObjectId;
-  userId: string;
-  order: number;
-  notes?: string;
-  salary?: string;
-  jobUrl?: string;
-  appliedDate?: Date;
-  tags?: string[];
-  description?: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-const JobApplicationSchema = new Schema<IJobApplication>(
+const JobApplicationSchema = new Schema<JobApplication>(
   {
     company: {
       type: String,
@@ -86,4 +68,4 @@ const JobApplicationSchema = new Schema<IJobApplication>(
 );
 
 export default mongoose.models.JobApplication ||
-  mongoose.model<IJobApplication>("JobApplication", JobApplicationSchema);
+  mongoose.model<JobApplication>("JobApplication", JobApplicationSchema);

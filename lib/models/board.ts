@@ -1,14 +1,7 @@
 import mongoose, { Schema, Document } from "mongoose";
+import { Board } from "./models.types";
 
-export interface IBoard extends Document {
-  name: string;
-  userId: string;
-  columns: mongoose.Types.ObjectId[];
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-const BoardSchema = new Schema<IBoard>(
+const BoardSchema = new Schema<Board>(
   {
     name: {
       type: String,
@@ -32,4 +25,4 @@ const BoardSchema = new Schema<IBoard>(
 );
 
 export default mongoose.models.Board ||
-  mongoose.model<IBoard>("Board", BoardSchema);
+  mongoose.model<Board>("Board", BoardSchema);

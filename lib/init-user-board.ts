@@ -29,13 +29,13 @@ export async function initializeUserBoard(userId: string) {
     await connectDB();
 
     // check if the board already exists
-    const exsitingBoard = await Board.findOne({ userId, name: "job Hunt" });
+    const exsitingBoard = await Board.findOne({ userId, name: "Job Hunt" });
 
     if (exsitingBoard) return exsitingBoard;
 
     // create the board
     const board = await Board.create({
-      name: "job hunt",
+      name: "Job Hunt",
       userId,
       columns: [],
     });

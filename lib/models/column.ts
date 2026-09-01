@@ -1,15 +1,7 @@
 import mongoose, { Schema, Document } from "mongoose";
+import { Column } from "./models.types";
 
-export interface IColumn extends Document {
-  name: string;
-  boardId: Schema.Types.ObjectId;
-  order: number;
-  jobApplications: mongoose.Types.ObjectId[];
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-const ColumnSchema = new Schema<IColumn>(
+const ColumnSchema = new Schema<Column>(
   {
     name: {
       type: String,
@@ -39,4 +31,4 @@ const ColumnSchema = new Schema<IColumn>(
 );
 
 export default mongoose.models.Column ||
-  mongoose.model<IColumn>("Column", ColumnSchema);
+  mongoose.model<Column>("Column", ColumnSchema);
