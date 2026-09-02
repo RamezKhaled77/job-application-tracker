@@ -17,7 +17,7 @@ export default function SignOutBtn() {
         }
       }}
     >
-      <LogOut />
+      <LogOut className="hover:text-red-700!" />
       Log Out
     </DropdownMenuItem>
   );
