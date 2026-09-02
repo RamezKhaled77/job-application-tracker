@@ -13,10 +13,6 @@ export default async function DashboardPage() {
 
   await connectDB();
 
-  const board = await Board.findOne({
-    userId: session.user.id,
-    name: "job hunt",
-  });
   const rawBoard = await initializeUserBoard(session.user.id);
   const plainBoard = JSON.parse(JSON.stringify(rawBoard));
 
@@ -25,7 +21,7 @@ export default async function DashboardPage() {
       <div className="container mx-auto p-6">
         <div className="mb-6">
           <h1 className="text-3xl font-bold font-anta text-zinc-950">
-            {board.name}
+            {plainBoard.name}
           </h1>
           <p className="text-zinc-800">Track your job applications</p>
         </div>

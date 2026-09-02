@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import { Column } from "./models.types";
 
 const ColumnSchema = new Schema<Column>(

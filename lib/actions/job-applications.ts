@@ -6,6 +6,8 @@ import Column from "@/lib/models/column";
 import { getSession } from "@/lib/auth/auth";
 import mongoose from "mongoose";
 import { revalidatePath } from "next/cache";
+import { Board } from "../models";
+
 export type FormState = {
   error?: string;
   success?: boolean;
@@ -18,6 +20,7 @@ export async function createJobApplication(
   try {
     await connectDB();
 
+    // * Get the current user session to ensure the user is authenticated
     const session = await getSession();
     if (!session?.user?.id) {
       return { error: "Unauthorized" };
@@ -28,8 +31,33 @@ export async function createJobApplication(
     const columnId = formData.get("columnId") as string;
     const boardId = formData.get("boardId") as string;
 
-    if (!columnId || !boardId) {
-      return { error: "Column ID and Board ID are required" };
+    //*  Verify board ownership
+    const board = await Board.findOne({
+      _id: boardId,
+      userId: session.user.id,
+    });
+
+    if (!board) {
+      return {
+        error: "Board not found .",
+      };
+    }
+
+    //* Verify column belogns to board
+    const column = await Column.findOne({
+      _id: columnId,
+      boardId: boardId,
+    });
+
+    if (!column) {
+      return {
+        error: "Column not found .",
+      };
+    }
+
+    //* Validate required fields
+    if (!columnId || !boardId || !company || !position) {
+      return { error: "Missing required fields" };
     }
 
     const location = (formData.get("location") as string) || "";
@@ -46,6 +74,13 @@ export async function createJobApplication(
           .filter(Boolean)
       : [];
 
+    const maxOrder = (await JobApplication.findOne({ columnId })
+      .sort({
+        order: -1,
+      })
+      .select("order")
+      .lean()) as { order: number } | null;
+
     const newJob = await JobApplication.create({
       company,
       position,
@@ -59,7 +94,7 @@ export async function createJobApplication(
       boardId: new mongoose.Types.ObjectId(boardId),
       columnId: new mongoose.Types.ObjectId(columnId),
       status: "applied",
-      order: 0,
+      order: maxOrder ? maxOrder.order + 1 : 0,
     });
 
     await Column.findByIdAndUpdate(columnId, {

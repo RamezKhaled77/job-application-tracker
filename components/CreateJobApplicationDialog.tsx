@@ -16,7 +16,10 @@ import { Field, FieldGroup, FieldSet } from "./ui/field";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
-import { createJobApplication, FormState } from "@/app/actions/job-application";
+import {
+  createJobApplication,
+  FormState,
+} from "@/lib/actions/job-applications";
 import { startTransition, useActionState, useState } from "react";
 
 interface CreateJobApplicationDialogProps {
@@ -52,7 +55,7 @@ export default function CreateJobApplicationDialog({
         render={
           <Button
             variant="outline"
-            className="w-full h-10 text-sm font-medium cursor-pointer text-zinc-600 hover:bg-gray-100"
+            className="w-full h-10 text-sm font-medium cursor-pointer text-zinc-500 hover:text-zinc-600! hover:bg-gray-100 border-dashed border-2 hover:border-solid"
           >
             {" "}
             <Plus className="mr-2 h-4 w-4" /> Add Job
