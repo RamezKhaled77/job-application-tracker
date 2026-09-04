@@ -13,9 +13,9 @@ import { Label } from "@/components/ui/label";
 import { signIn } from "@/lib/auth/auth-client";
 import { Loader } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 
-export default function SignInPage() {
+function SignIn() {
   //SECTION - Form data
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -125,5 +125,19 @@ export default function SignInPage() {
         </form>
       </Card>
     </div>
+  );
+}
+
+export default function SignInPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center">
+          Loading...
+        </div>
+      }
+    >
+      <SignIn />
+    </Suspense>
   );
 }

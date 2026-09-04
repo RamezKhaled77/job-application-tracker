@@ -15,7 +15,7 @@ export async function initializeUserBoard(userId: string) {
 
     let board = await Board.findOne({
       userId,
-      name: { $regex: /^job hunt$/i },
+      name: "Job Hunt",
     }).populate({
       path: "columns",
       populate: {
@@ -29,7 +29,7 @@ export async function initializeUserBoard(userId: string) {
 
     if (!board) {
       board = await Board.create({
-        name: "job hunt",
+        name: "Job Hunt",
         userId,
         columns: [],
       });
