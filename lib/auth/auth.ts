@@ -13,6 +13,12 @@ export const auth = betterAuth({
     client,
     transaction: false, // For fix the error
   }),
+  session: {
+    cookieCache: {
+      enabled: true,
+      maxAge: 60 * 60,
+    },
+  },
   emailAndPassword: {
     enabled: true,
   },

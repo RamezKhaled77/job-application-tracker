@@ -106,7 +106,7 @@ function DraggableColumn({
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-2 pt-4 bg-gray-50/50 min-h-[400px] rounded-b-lg ">
+      <CardContent className="space-y-2 py-4 bg-gray-50/50 min-h-[400px] rounded-b-lg ">
         {sortedJobs.map((job, key) => (
           <SortableJobCard
             key={key}
