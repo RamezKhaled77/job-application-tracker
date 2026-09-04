@@ -23,6 +23,7 @@ import {
 import { Button } from "./ui/button";
 import CreateJobApplicationDialog from "./CreateJobApplicationDialog";
 import JobApplicationCard from "./JobApplicationCard";
+import { useBoard } from "@/lib/hooks/useBoards";
 
 interface KanbanBoardProps {
   board: ClientBoard;
@@ -139,14 +140,14 @@ function SortableJobCard({
 }
 
 export default function KanbanBoard({ board, userId }: KanbanBoardProps) {
-  const columns = board.columns;
+  const { columns, moveJob } = useBoard(board);
 
   const sortedColumns = columns?.sort((a, b) => a?.order - b?.order) || [];
 
   return (
     <div className="">
       <div>
-        {columns.map((col, i) => {
+        {columns?.map((col, i) => {
           const columnData = col as unknown as ClientColumn;
 
           const config = COLUMN_CONFIG[i] || {
