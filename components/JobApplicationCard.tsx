@@ -45,11 +45,13 @@ import { useState } from "react";
 interface JobApplicationCardProps {
   job: ClientJobApplication;
   columns: ClientColumn[];
+  dragHandleProps?: React.HTMLAttributes<HTMLElement>;
 }
 
 export default function JobApplicationCard({
   job,
   columns,
+  dragHandleProps,
 }: JobApplicationCardProps) {
   const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -115,7 +117,10 @@ export default function JobApplicationCard({
   }
   return (
     <>
-      <Card className="cursor-pointer transition-shadow hover:shadow-lg bg-white group shadow-sm">
+      <Card
+        {...dragHandleProps}
+        className="cursor-pointer transition-shadow hover:shadow-lg bg-white group shadow-sm"
+      >
         <CardContent className="p-4">
           <div className="flex items-start justify-between gap-2">
             <div className="flex-1 min-w-0">
