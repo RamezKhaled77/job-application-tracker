@@ -12,9 +12,21 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Button } from "./ui/button";
-import { updateJobApplication } from "@/lib/actions/job-applications";
-import { Plus } from "lucide-react";
+import {
+  deleteJobApplication,
+  updateJobApplication,
+} from "@/lib/actions/job-applications";
 import {
   Dialog,
   DialogClose,
@@ -23,7 +35,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "./ui/dialog";
 import { Field, FieldGroup, FieldSet } from "./ui/field";
 import { Label } from "./ui/label";
@@ -40,6 +51,7 @@ export default function JobApplicationCard({
   job,
   columns,
 }: JobApplicationCardProps) {
+  const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -72,6 +84,23 @@ export default function JobApplicationCard({
       }
     } catch (err) {
       console.error("Failed to move job application: ", err);
+      setIsLoading(false);
+    }
+  }
+
+  async function handleDelete() {
+    setIsLoading(true);
+    try {
+      const result = await deleteJobApplication(job._id);
+
+      if (result.error) {
+        console.error("Failed to delete job application: ", result.error);
+      }
+      setIsLoading(false);
+      setDeleteDialogIsOpen(false);
+    } catch (err) {
+      console.error("Failed to move job application: ", err);
+      setIsLoading(false);
     }
   }
 
@@ -160,7 +189,10 @@ export default function JobApplicationCard({
                       <Edit2 className="mr-2 h-4 w-4" />
                       Edit
                     </DropdownMenuItem>
-                    <DropdownMenuItem className="text-destructive cursor-pointer hover:bg-red-100! hover:text-red-700!">
+                    <DropdownMenuItem
+                      onClick={() => setDeleteDialogIsOpen(true)}
+                      className="text-destructive cursor-pointer hover:bg-red-100! hover:text-red-700!"
+                    >
                       <Trash2 className="mr-2 h-4 w-4" />
                       Delete
                     </DropdownMenuItem>
@@ -171,6 +203,36 @@ export default function JobApplicationCard({
           </div>
         </CardContent>
       </Card>
+
+      <AlertDialog
+        open={deleteDialogIsOpen}
+        onOpenChange={setDeleteDialogIsOpen}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete{" "}
+              <span className="font-medium text-zinc-800 underline">
+                {job.position}
+              </span>{" "}
+              job from our servers.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="cursor-pointer">
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              disabled={isLoading}
+              onClick={() => handleDelete()}
+              className="bg-red-500 text-white hover:bg-red-600! cursor-pointer"
+            >
+              {isLoading ? "Deleting..." : "Delete"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       <Dialog open={isEditing} onOpenChange={setIsEditing}>
         <DialogContent className="max-w-lg! p-6!">
